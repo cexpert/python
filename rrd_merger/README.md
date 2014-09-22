@@ -1,0 +1,1 @@
+Cacti的rrd图缺失，希望从cacti备份的rrd中将数据合并到缺数据的rrd中。
