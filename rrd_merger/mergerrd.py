@@ -5,6 +5,14 @@ import os
 import re
 import sys
 
+#判断用户输入的字符串
+def str_decide(in_str):
+	if (len(in_str) == 10) and in_str.isdigit():
+		return True
+	else:
+		return False
+#
+
 #获取用户输入参数
 def getUserInput():
 	start = ""
@@ -18,13 +26,17 @@ def getUserInput():
 	else:
 		while (start == ""):
 			start = raw_input("Please input start time:")
+		while (not str_decide(start)):
+			start = raw_input("Bad file mode, Please input start time again:")
 	
 	if (len(sys.argv) >2) and (sys.argv[2].isdigit()):
 		end = sys.argv[2]
 	else:
 		while (end == ""):
 			end = raw_input("Please input end time:")
-
+		while (not str_decide(end)):
+			end = raw_input("Bad file mode, Please input end time again:")
+			
 	if (len(sys.argv) >3) and (sys.argv[3].isdigit()):
 		offset = sys.argv[3]
 	else:
