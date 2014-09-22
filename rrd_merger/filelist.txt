@@ -1,0 +1,2 @@
+#需要修改数据的rrd文件		需要提取数据的rrd文件
+/root/work/1164.rrd	/root/work/lax1-cr02_traffic_in_352.rrd
