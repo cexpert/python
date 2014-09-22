@@ -23,6 +23,7 @@ def getUserInput():
 	
 	if (len(sys.argv) >1) and (sys.argv[1].isdigit()):
 		start = sys.argv[1]
+		
 	else:
 		while (start == ""):
 			start = raw_input("Please input start time:")
@@ -40,7 +41,7 @@ def getUserInput():
 	if (len(sys.argv) >3) and (sys.argv[3].isdigit()):
 		offset = sys.argv[3]
 	else:
-		print "offset default is 0"
+		print "The offset default is 0"
 
 	return start,end,offset
 #
