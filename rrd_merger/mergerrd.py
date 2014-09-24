@@ -1,11 +1,11 @@
-#! /usr/bin/env python
+#!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
 import os
 import re
 import sys
 
-#ÅĞ¶ÏÓÃ»§ÊäÈëµÄ×Ö·û´®
+#åˆ¤æ–­ç”¨æˆ·è¾“å…¥çš„å­—ç¬¦ä¸²
 def str_decide(in_str):
 	if (len(in_str) == 10) and in_str.isdigit():
 		return True
@@ -13,7 +13,7 @@ def str_decide(in_str):
 		return False
 #
 
-#»ñÈ¡ÓÃ»§ÊäÈë²ÎÊı
+#è·å–ç”¨æˆ·è¾“å…¥å‚æ•°
 def getUserInput():
 	start = ""
 	end = ""
@@ -46,13 +46,13 @@ def getUserInput():
 	return start,end,offset
 #
 
-#»ñÈ¡ĞèÒªĞŞ¸ÄµÄrrdÎÄ¼şÁĞ±í
+#è·å–éœ€è¦ä¿®æ”¹çš„rrdæ–‡ä»¶åˆ—è¡¨
 def GetFilelist():
 	file_list = []
 	file = open("filelist.txt")
 	f = file.readlines()
 	for x in f:
-		#Í¨¹ıÕıÔòÈ¥¹ıÂËµô:1.ÎÄ¼şÁĞ±íÖĞ'#'ºÅ¿ªÍ·µÄ×¢ÊÍ 2.¿Õ°×ĞĞ
+		#é€šè¿‡æ­£åˆ™å»è¿‡æ»¤æ‰:1.æ–‡ä»¶åˆ—è¡¨ä¸­'#'å·å¼€å¤´çš„æ³¨é‡Š 2.ç©ºç™½è¡Œ
 		if re.match(r'(^#|^$)',x):
 			continue
 		file_list.append((x.split()[0],x.split()[1]))
@@ -60,7 +60,7 @@ def GetFilelist():
 	return file_list
 #
 
-#Ö´ĞĞÏµÍ³ÃüÁî£¬ÊµÏÖ´Ó±¸·İÊı¾İÖĞÌáÈ¡ĞèÒªµÄÊı¾İ
+#æ‰§è¡Œç³»ç»Ÿå‘½ä»¤ï¼Œå®ç°ä»å¤‡ä»½æ•°æ®ä¸­æå–éœ€è¦çš„æ•°æ®
 def fetch_data(rrdfile,start_time,end_time):
 	cmd = "rrdtool fetch " + rrdfile + " AVERAGE --start " + start_time + " --end " + end_time + " > rrd_data.tmp"
 	#print cmd
@@ -70,7 +70,7 @@ def fetch_data(rrdfile,start_time,end_time):
 	f.close()
 	rrd_data_dict = {}
 	for x in rrd_data_array:
-		#È¥³ı"rrdtool fetch"»ñÈ¡Êı¾İµÄ·Ç±ØÒªÊı¾İ£º1.¿ÕĞĞ 2.¿Õ°×¿ªÍ·
+		#å»é™¤"rrdtool fetch"è·å–æ•°æ®çš„éå¿…è¦æ•°æ®ï¼š1.ç©ºè¡Œ 2.ç©ºç™½å¼€å¤´
 		if re.match(r'(^\s|^$)',x):
 			continue
 		arr_a = x.split(":")
@@ -79,19 +79,19 @@ def fetch_data(rrdfile,start_time,end_time):
 #
 
 #The master core
-#xmlÊı¾İÌæ»»
+#xmlæ•°æ®æ›¿æ¢
 def date_replace(xml_file,rrd_data,offset):
 	f = open(xml_file)
 	alllines = f.readlines()
 	f.close()
-	#±éÀúrrd_data£¬»ñÈ¡Ã¿¸öÊ±¼ä½ÚµãµÄÊı¾İÖµ£¬È¥Ìæ»»¶ÁxmlÉú³ÉµÄlist
+	#éå†rrd_dataï¼Œè·å–æ¯ä¸ªæ—¶é—´èŠ‚ç‚¹çš„æ•°æ®å€¼ï¼Œå»æ›¿æ¢è¯»xmlç”Ÿæˆçš„list
 	for x in rrd_data:
-		#xÎª»ñÈ¡µ½µÄÊ±¼äµã£º1410425100
+		#xä¸ºè·å–åˆ°çš„æ—¶é—´ç‚¹ï¼š1410425100
 		i = 0
 		while i < len(alllines):
 			y = alllines[i]
 			#print "y",y
-			#yÎªĞèÒª½øĞĞÌæ»»µÄĞĞ£º<!-- 2014-09-11 18:20:00 CST / 1410430800 --> <row><v>NaN</v><v>NaN</v></row>
+			#yä¸ºéœ€è¦è¿›è¡Œæ›¿æ¢çš„è¡Œï¼š<!-- 2014-09-11 18:20:00 CST / 1410430800 --> <row><v>NaN</v><v>NaN</v></row>
 			if (y.find(str(int(x) + offset)) >= 0):
 				p1 = re.compile(r'<row><v>(\d.\.\d*.e\+\d*.|NaN)</v>')
 				p2 = re.compile(r'<v>(\d.\.\d*.e\+\d*.|NaN)</v></row>')
@@ -102,12 +102,12 @@ def date_replace(xml_file,rrd_data,offset):
 				y = re.sub( p1, replace1, y)
 				y = re.sub( p2, replace2, y)
 				alllines[i] = y
-				#Í¨¹ıÕıÔòÌæ»»ºó£¬Éú³ÉĞÂµÄ×¼È·µÄxmlĞĞ£º<!-- 2014-09-11 18:20:00 CST / 1410430800 --> <row><v>5.8968040288e+07</v><v>6.8763777241e+08</v></row>
+				#é€šè¿‡æ­£åˆ™æ›¿æ¢åï¼Œç”Ÿæˆæ–°çš„å‡†ç¡®çš„xmlè¡Œï¼š<!-- 2014-09-11 18:20:00 CST / 1410430800 --> <row><v>5.8968040288e+07</v><v>6.8763777241e+08</v></row>
 			i += 1
 	return alllines
 #
 
-#Ö´ĞĞÏµÍ³ÃüÁî£¬ÊµÏÖrrdµ½xmlµÄ×ª»»
+#æ‰§è¡Œç³»ç»Ÿå‘½ä»¤ï¼Œå®ç°rrdåˆ°xmlçš„è½¬æ¢
 def rrd_to_xml(rrdfile):
 	(filepath,filename)=os.path.split(rrdfile)
 	to_xml_file = filepath + os.sep + filename.split('.')[0] + ".xml"
@@ -116,7 +116,7 @@ def rrd_to_xml(rrdfile):
 	return to_xml_file
 #
 
-#Ö´ĞĞÏµÍ³ÃüÁî£¬ÊµÏÖxmlµ½rrdµÄ×ª»»»Ö¸´£¬Íê³ÉĞŞ¸ÄÈÎÎñ
+#æ‰§è¡Œç³»ç»Ÿå‘½ä»¤ï¼Œå®ç°xmlåˆ°rrdçš„è½¬æ¢æ¢å¤ï¼Œå®Œæˆä¿®æ”¹ä»»åŠ¡
 def xml_to_rrd(rrdfile,xmlfile,arr):
 	os.rename(xmlfile,xmlfile + ".bak")
 	print "\t debug1"
@@ -131,22 +131,22 @@ def xml_to_rrd(rrdfile,xmlfile,arr):
 	os.system(cmd)
 #
 
-#³ÌĞòÈë¿Ú
+#ç¨‹åºå…¥å£
 if __name__ == "__main__":
 	(start,end,offset) = getUserInput()
 	
-	#file_array:rrdÎÄ¼ş¶ÔÓ¦ÁĞ±í	[('/root/work/1164.rrd', '/root/work/lax1-cr02_traffic_in_352.rrd')]
+	#file_array:rrdæ–‡ä»¶å¯¹åº”åˆ—è¡¨	[('/root/work/1164.rrd', '/root/work/lax1-cr02_traffic_in_352.rrd')]
 	file_array = GetFilelist()
 
 	for x in file_array:
-		#½øĞĞÎÄ¼ş×ª»»
-		#1.Ö÷:xml_file_a	ĞèÒªĞŞ¸ÄÊı¾İµÄÎÄ¼ş
-		#2.±¸:ml_file_b		ĞèÒªÌáÈ¡Êı¾İµÄÎÄ¼ş
+		#è¿›è¡Œæ–‡ä»¶è½¬æ¢
+		#1.ä¸»:xml_file_a	éœ€è¦ä¿®æ”¹æ•°æ®çš„æ–‡ä»¶
+		#2.å¤‡:ml_file_b		éœ€è¦æå–æ•°æ®çš„æ–‡ä»¶
 		(xml_file,rrd_data) = (rrd_to_xml(x[0]),fetch_data(x[1],start,end))
 		print "step 1", os.system("date")
-		#xml_file:[string]	ĞèÒªĞŞ¸Ärrd×ª»»³ÉµÄxmlÎÄ¼ş	/root/work/1164.xml
-		#rrd_data:[dict]	×÷ÎªÌæ»»xmlÎÄ¼şµÄÔ­Ê¼Êı¾İ	{'1410411600': ['4.2562895157e+07', '7.4280305788e+08'],...}
-		#offset:[int]		Ê±¼äÆ«ÒÆÁ¿
+		#xml_file:[string]	éœ€è¦ä¿®æ”¹rrdè½¬æ¢æˆçš„xmlæ–‡ä»¶	/root/work/1164.xml
+		#rrd_data:[dict]	ä½œä¸ºæ›¿æ¢xmlæ–‡ä»¶çš„åŸå§‹æ•°æ®	{'1410411600': ['4.2562895157e+07', '7.4280305788e+08'],...}
+		#offset:[int]		æ—¶é—´åç§»é‡
 		arr_replace_ok = date_replace(xml_file,rrd_data,offset)
 		#arr_replace_ok = ["a","a","a","a"]
 		print "step 2",os.system("date")
